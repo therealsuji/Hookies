@@ -10,10 +10,12 @@ public class SandBoxCharacterController : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     public CharacterController controller;
 
-    public float jumpforce;
     public float speed;
     public float gravityScale;
-
+    float jumpForce = 15;
+    float verticalVelocity;
+    private float gravityJump = 14.0f;
+    public float gravity = -9.8f;
     void Start()
     {
         Cursor.visible = false;
@@ -27,11 +29,11 @@ public class SandBoxCharacterController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // var characterRotation = camera.transform.rotation;
-        // characterRotation.x = 0;
-        // characterRotation.z = 0;
+        var characterRotation = camera.transform.rotation;
+        characterRotation.x = 0;
+        characterRotation.z = 0;
 
-        // transform.rotation = characterRotation;
+        transform.rotation = characterRotation;
         
         HandlePlayerMovements();
 
@@ -39,18 +41,33 @@ public class SandBoxCharacterController : MonoBehaviour
 
     private void HandlePlayerMovements()
     {
-        moveDirection = new Vector3(Input.GetAxis("Horizontal") * speed, moveDirection.y, Input.GetAxis("Vertical") * speed);
-    
+        float deltaX = Input.GetAxis("Horizontal") * speed;
+        float deltaZ = Input.GetAxis("Vertical") * speed;
+        Vector3 movement = new Vector3(deltaX, 0, deltaZ);
+        movement = Vector3.ClampMagnitude(movement, speed);
+
+        movement.y = gravity;
+
+        movement *= Time.deltaTime;
+        movement = transform.TransformDirection(movement);
+        controller.Move(movement);
+
+
         if (controller.isGrounded)
         {
+            verticalVelocity = -gravityJump * Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                moveDirection.y = jumpforce;
+                verticalVelocity = jumpForce;
             }
         }
-        
+        else
+        {
+            verticalVelocity -= gravityJump * Time.deltaTime;
 
-        moveDirection.y = moveDirection.y + (Physics.gravity.y * gravityScale * Time.deltaTime);
-        controller.Move(moveDirection * Time.deltaTime);
+        }
+
+        Vector3 jumpVector = new Vector3(0, verticalVelocity, 0);
+        controller.Move(jumpVector * Time.deltaTime);
     }
 }

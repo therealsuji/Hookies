@@ -24,10 +24,14 @@ public class HookController : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(transform.position, camera.transform.forward*25, Color.yellow);
+ 
+        float x = Screen.width / 2;
+        float y = Screen.height / 2;
+                    
+        Ray ray = camera.ScreenPointToRay(new Vector3(x, y, 0));
+        Debug.DrawRay(ray.origin, ray.direction * 50, new Color(1f,0.922f,0.016f,1f));
+        Debug.DrawRay(hook.transform.position, ray.direction * 50, Color.green);
 
-
-        if (fired)
         {
             LineRenderer lr = hook.GetComponent<LineRenderer>();
             lr.positionCount = 2;
@@ -39,12 +43,13 @@ public class HookController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && fired == false)
         {
             fired = true;
-            hookDirection = camera.transform.forward;
+            hookDirection = ray.direction;
 
         }
         if (Input.GetMouseButtonUp(0))
         {
-            if(hooked){
+            if (hooked)
+            {
                 PushAwayObject();
             }
             ResetHook();
@@ -68,21 +73,22 @@ public class HookController : MonoBehaviour
     {
         if (other.transform.tag == "Hookable")
         {
-           hooked=true;
-           hookedObj=other.transform.GetComponent<Rigidbody>();
+            hooked = true;
+            hookedObj = other.transform.GetComponent<Rigidbody>();
         }
     }
 
-    void PushAwayObject(){
-        hookedObj.isKinematic=false;
-        hookedObj.useGravity=true;
+    void PushAwayObject()
+    {
+        hookedObj.isKinematic = false;
+        hookedObj.useGravity = true;
         print("Hooked");
-        hookedObj.AddForce(camera.transform.forward*pushForce,ForceMode.Impulse);
+        hookedObj.AddForce(camera.transform.forward * pushForce, ForceMode.Impulse);
     }
 
     void ResetHook()
     {
-        hooked=false;
+        hooked = false;
         LineRenderer lr = hook.GetComponent<LineRenderer>();
         lr.positionCount = 0;
         hook.transform.parent = hookPlaceHolder.transform;
