@@ -14,6 +14,10 @@ public class HookController : MonoBehaviour
     Vector3 hookDirection;
     Rigidbody hookedObj;
     public float pushForce;
+    bool deflect = false;
+    Vector3 deflectDir;
+    private Vector3 hitPoint;
+
     void Start()
     {
         camera = GameObject.FindObjectOfType<Camera>();
@@ -21,30 +25,61 @@ public class HookController : MonoBehaviour
         hookPlaceHolder = GameObject.FindGameObjectWithTag("HookPlaceHolder");
 
     }
+    bool hitObj = false;
+    void Aim()
+    {
+        float screenX = Screen.width / 2;
+        float screenY = Screen.height / 2;
 
+        RaycastHit hit;
+        Ray ray = camera.ScreenPointToRay(new Vector3(screenX, screenY));
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            hitObj = true;
+            hook.transform.LookAt(hit.point);
+        }
+        else
+        {
+
+            hookDirection = camera.transform.forward;
+        }
+    }
     void Update()
     {
- 
+
         float x = Screen.width / 2;
         float y = Screen.height / 2;
-                    
-        Ray ray = camera.ScreenPointToRay(new Vector3(x, y, 0));
-        Debug.DrawRay(ray.origin, ray.direction * 50, new Color(1f,0.922f,0.016f,1f));
-        Debug.DrawRay(hook.transform.position, ray.direction * 50, Color.green);
 
+        Ray ray = camera.ScreenPointToRay(new Vector3(x, y, 0));
+        Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow);
+
+
+
+        //if not deflecting then draw the first line after shooting
+        LineRenderer lr = hook.GetComponent<LineRenderer>();
+        lr.positionCount = 2;
+        if (!deflect)
         {
-            LineRenderer lr = hook.GetComponent<LineRenderer>();
-            lr.positionCount = 2;
             lr.SetPosition(0, hookPlaceHolder.transform.position);
             lr.SetPosition(1, hook.transform.position);
 
+
         }
 
+        Debug.DrawRay(hook.transform.position, camera.transform.forward * 1000, Color.magenta);
         if (Input.GetMouseButtonDown(0) && fired == false)
         {
+            Aim();
+            if (hitObj)
+            {
+                hookDirection = hook.transform.forward;
+            }
+            else
+            {
+                hookDirection = camera.transform.forward;
+            }
             fired = true;
-            hookDirection = ray.direction;
-
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -57,8 +92,20 @@ public class HookController : MonoBehaviour
 
         if (fired == true && !hooked)
         {
-            hook.transform.parent = null;
-            hook.transform.Translate(hookDirection * Time.deltaTime * hookTravelSpeed, Space.World);
+
+            if (deflect)
+            {
+                hook.transform.Translate(deflectDir.normalized * Time.deltaTime * hookTravelSpeed, Space.World);
+                Debug.DrawRay(hitPoint, deflectDir * 50, Color.yellow);
+
+                lr.SetPosition(0, hitPoint);
+                lr.SetPosition(1, hook.transform.position);
+            }
+            if (!deflect)
+            {
+                hook.transform.parent = null;
+                hook.transform.Translate(hookDirection.normalized * Time.deltaTime * hookTravelSpeed, Space.World);
+            }
             distance = Vector3.Distance(hookPlaceHolder.transform.position, hook.transform.position);
 
             if (distance > 25)
@@ -66,6 +113,20 @@ public class HookController : MonoBehaviour
                 ResetHook();
             }
         }
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, ray.direction * 50, out hit, Mathf.Infinity) && !fired)
+        {
+
+            Vector3 incomingVec = hit.point - hook.transform.position;
+            Vector3 reflectVec = Vector3.Reflect(incomingVec, hit.normal);
+
+            Debug.DrawLine(hook.transform.position, hit.point, Color.red);
+            Debug.DrawRay(hit.point, reflectVec, Color.green);
+            deflectDir = reflectVec;
+            hitPoint = hit.point;
+        }
+
+
     }
 
 
@@ -75,6 +136,11 @@ public class HookController : MonoBehaviour
         {
             hooked = true;
             hookedObj = other.transform.GetComponent<Rigidbody>();
+        }
+        if (other.transform.tag != "Hookable" && other.transform.tag != "Player")
+        {
+
+            deflect = true;
         }
     }
 
@@ -88,6 +154,7 @@ public class HookController : MonoBehaviour
 
     void ResetHook()
     {
+        deflect = false;
         hooked = false;
         LineRenderer lr = hook.GetComponent<LineRenderer>();
         lr.positionCount = 0;
