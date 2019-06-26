@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8e875a32144d05044a87a0f385c123e4
+guid: 178cb08a6169b3e49b328532514b6537
 ModelImporter:
   serializedVersion: 27
   internalIDToNameTable: []
@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: palette
-    second: {fileID: 2100000, guid: 17d5c2b0f9a26e746b557d1980405cf3, type: 2}
+      name: HookMat
+    second: {fileID: 2100000, guid: 64694487c5fdf4b44a7c1a3d78df9f7e, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

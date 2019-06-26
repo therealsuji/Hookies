@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: abcf75ad30bb96842890bb960e8edd06
+guid: 7bc816bb0f399c94c84498a9047a54fc
 ModelImporter:
   serializedVersion: 27
   internalIDToNameTable:
@@ -7,25 +7,15 @@ ModelImporter:
       74: 4781951162920444690
     second: Armature|ArmatureAction
   - first:
-      74: -5779949556069396123
-    second: Armature|Hook NewAction
+      74: -1422011007694221501
+    second: Armature|ArmatureAction.001
   - first:
       74: 2073693694548410006
     second: Armature.001|Armature.001|mixamo.com|Layer0
   - first:
-      74: -9011246233256893369
-    second: Armature.001|Hook NewAction
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: palette.006
-    second: {fileID: 2100000, guid: 0f1d4d95faa5a9e44a2665194338506f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: palette.007
-    second: {fileID: 2100000, guid: 46ca82846fde35b44887fab43141a988, type: 2}
+      74: -960898424075949690
+    second: Armature.001|ArmatureAction
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -58,7 +48,7 @@ ModelImporter:
       takeName: Armature|ArmatureAction
       internalID: 4781951162920444690
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 1
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -83,11 +73,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Hook NewAction
-      takeName: Armature|Hook NewAction
-      internalID: -5779949556069396123
+      name: Armature|ArmatureAction.001
+      takeName: Armature|ArmatureAction.001
+      internalID: -1422011007694221501
       firstFrame: 0
-      lastFrame: 1
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -141,9 +131,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature.001|Hook NewAction
-      takeName: Armature.001|Hook NewAction
-      internalID: -9011246233256893369
+      name: Armature.001|ArmatureAction
+      takeName: Armature.001|ArmatureAction
+      internalID: -960898424075949690
       firstFrame: 0
       lastFrame: 1
       wrapMode: 0
